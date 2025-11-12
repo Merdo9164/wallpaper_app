@@ -8,7 +8,7 @@ class WallpaperApi{
 
     Future<List<Wallpaper>> getAllWallpapers () async {
 
-        final response = await http.get(Uri.parse('$baseUrl/api/wallpapers'));
+        final response = await http.get(Uri.parse('$baseUrl/api/wallpaper'));
 
         if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
