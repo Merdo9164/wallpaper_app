@@ -1,5 +1,5 @@
 class Wallpaper {
-  final int id;
+  final String id;
   final String title;
   final String url;
 
@@ -7,9 +7,9 @@ class Wallpaper {
 
   factory Wallpaper.fromJson(Map<String, dynamic> json) {
     return Wallpaper(
-      id: json['id'],
-      title: json['title'],
-      url: json['url'],
+      id: json['id']?.toString() ?? '',
+      title: json['title'] ?? '',
+      url: json['url'] ?? '',
     );
   }
 }
