@@ -52,6 +52,13 @@ class _HomePageState extends State<HomePage> {
                                         ? Image.network(
                                             wallpaper.url!,
                                             fit: BoxFit.cover,
+                                            loadingBuilder: (context,child, progress){
+                                                if ( progress == null) return child;
+                                                return Center (child : CircularProgressIndicator());
+                                            },
+                                            errorBuilder : (context , error , stackTrace){
+                                                return Container(color: Colors.grey[300]);
+                                            },
                                           )
                                         : Container(
                                             color: Colors.grey[300],
