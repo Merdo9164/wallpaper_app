@@ -23,8 +23,44 @@ class _HomePageState extends State<HomePage> {
     Widget build(BuildContext context){
         return Scaffold(
             appBar: AppBar(title: Text('Wallpapers')),
-            body : Center(
-                child: Text('........'),
+            body : FutureBuilder<List<Wallpaper>>(
+                future : wallpapersFuture,
+                builder : (context , snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                        return Center(child: CircularProgressIndicator());
+                    }else if (snapshot.hasError){
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                    }else if (!snapshot.hasData || snapshot.data!.isEmpty){
+                        return Center(child: Text('No wallpapers found'));
+                    }else {
+                        fina wallpapers = snapshot.data!;
+                        return GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // iki kolon
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                childAspectRatio: 0.7,
+                            ),
+                            itemCount: wallpapers.length,
+                            itemBuilder: (context, index){
+                                final wallpaper = wallpapers[index];
+                                return GestureDetector(
+                                    onTap: (){
+                                        // Tıklama
+                                    },
+                                    child: wallpaper.url != null
+                                        ? Image.network(
+                                            wallpaper.url!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Container(
+                                            color: Colors.grey[300],
+                                        ),
+                                );
+                            },
+                        );
+                    }
+                },
             ),
         );
     }
