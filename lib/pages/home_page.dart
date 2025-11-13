@@ -44,25 +44,36 @@ class _HomePageState extends State<HomePage> {
                             itemCount: wallpapers.length,
                             itemBuilder: (context, index){
                                 final wallpaper = wallpapers[index];
+                                final heroTag = 'wallpaper-${wallpaper.id}';
                                 return GestureDetector(
                                     onTap: (){
-                                        // Tıklama
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FullScreenPage(wallpaper: wallpaper),
+                                            ),
+                                        );
                                     },
-                                    child: wallpaper.url != null
-                                        ? Image.network(
-                                            wallpaper.url!,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (context,child, progress){
-                                                if ( progress == null) return child;
-                                                return Center (child : CircularProgressIndicator());
-                                            },
-                                            errorBuilder : (context , error , stackTrace){
-                                                return Container(color: Colors.grey[300]);
-                                            },
-                                          )
-                                        : Container(
-                                            color: Colors.grey[300],
+                                    child : Hero(
+                                        tag : heroTag, // (liste ve detay sayfasındaki) yumuşak geçiş animasyonu oluşur
+                                        child : ClipRRect( // köşeleri yuvarlat
+                                            borderRadius : BorderRadius.circular(12),
+                                            child : Image.network(
+                                                wallpaper.url!,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (context,child, progress){
+                                                    if ( progress == null) return child;
+                                                    return Center (child : CircularProgressIndicator());
+                                                },
+                                                errorBuilder : (context , error , stackTrace){
+                                                    return const Center(
+                                                        child : Icon(Icons.broken_image , size: 48),
+                                                    );
+                                                },
+                                            ),
                                         ),
+                                    ),
                                 );
                             },
                         );
