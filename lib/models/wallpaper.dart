@@ -1,15 +1,15 @@
 class Wallpaper {
   final String id;
   final String title;
-  final String url;
+  final String imageUrl;
 
-  Wallpaper({required this.id, required this.title, required this.url});
+  Wallpaper({required this.id, required this.title, required this.imageUrl});
 
   factory Wallpaper.fromJson(Map<String, dynamic> json) {
     return Wallpaper(
       id: json['id']?.toString() ?? '',
       title: json['title'] ?? '',
-      url: json['url'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
     );
   }
 }

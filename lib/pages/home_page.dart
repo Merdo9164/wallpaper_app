@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/wallpaper.dart';
 import '../services/wallpaper_api.dart';
+import 'full_screen_page.dart';
+
 
 class HomePage extends StatefulWidget{
     const HomePage({super.key});
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                     }else if (!snapshot.hasData || snapshot.data!.isEmpty){
                         return Center(child: Text('No wallpapers found'));
                     }else {
-                        fina wallpapers = snapshot.data!;
+                        final wallpapers = snapshot.data!;
                         return GridView.builder(
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, // iki kolon
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                                         child : ClipRRect( // köşeleri yuvarlat
                                             borderRadius : BorderRadius.circular(12),
                                             child : Image.network(
-                                                wallpaper.url!,
+                                                wallpaper.imageUrl!,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder: (context,child, progress){
                                                     if ( progress == null) return child;
