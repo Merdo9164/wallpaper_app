@@ -7,21 +7,64 @@ class FullScreenPage extends StatelessWidget {
 
   const FullScreenPage({super.key, required this.wallpaper});
 
-  Future<void> _setWallpaper(BuildContext context) async {
+  Future<void> _setWallpaper(BuildContext context , int target) async {
     try {
       final imagePath = await WallpaperService.downloadImage(wallpaper.imageUrl);
 
-      await WallpaperService.setHomeWallpaper(imagePath);
-      await WallpaperService.setLockScreenWallpaper(imagePath);
+      if (target == 0) {
+        await WallpaperService.setLockScreenWallpaper(imagePath);  // kilit ekranına uygula
+      } else if (target == 1) {
+        await WallpaperService.setHomeWallpaper(imagePath);     // Ana Ekrana uygula
+      } else {
+        await WallpaperService.setHomeWallpaper(imagePath);       // her ikisinede uygula
+        await WallpaperService.setLockScreenWallpaper(imagePath);
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Wallpaper ayarlandı!')),
+        const SnackBar(content: Text('Wallpaper başarıyla uygulandı!')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Hata: $e')),
       );
     }
+  }
+// snackbar gösterim
+
+  void _showOptions (BuildContext context){
+    showModalBottomSheet(
+      context: context,
+      builder : (_){
+        return SafeArea(
+          child : Column(
+            mainAxisSize : MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Kilit ekranı olarak belirle'),
+                onTap : (){
+                  Navigator.pop(context);
+                  _setWallpaper(context , 0);
+                },
+              ),
+              ListTile(
+                title: const Text('Ana ekran olarak belirle'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _setWallpaper(context,1);
+                },
+              ),
+              ListTile(
+                title: const Text('Her ikisi olarak ayarla'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _setWallpaper(context, 2);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -51,6 +94,8 @@ class FullScreenPage extends StatelessWidget {
                 child: wallpaper.imageUrl.isNotEmpty
                     ? Image.network(
                         wallpaper.imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, progress) {
                           if (progress == null) return child;
@@ -71,13 +116,28 @@ class FullScreenPage extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            bottom: 30,
-            right: 30,
-            child: FloatingActionButton.extended(
-              onPressed: () => _setWallpaper(context),
-              label: const Text('Set Wallpaper'),
-              icon: const Icon(Icons.wallpaper),
+          // Alt orta buton
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20 , vertical: 50), // ekranın kenarlarından boşluk 
+              child : ElevatedButton(
+                style : ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.7),  // yarı şeffaf beyaz
+                  padding: const EdgeInsets.symmetric(vertical: 15), // yüksekliği arttır
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12), // köşeleri yuvarlat
+                  ),
+                ),
+                onPressed: () => _showOptions(context),
+                child : const Text('Uygula',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
