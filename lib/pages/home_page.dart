@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/wallpaper.dart';
 import '../services/wallpaper_api.dart';
 import 'full_screen_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class HomePage extends StatefulWidget{
@@ -61,18 +62,16 @@ class _HomePageState extends State<HomePage> {
                                         tag : heroTag, // (liste ve detay sayfasındaki) yumuşak geçiş animasyonu oluşur
                                         child : ClipRRect( // köşeleri yuvarlat
                                             borderRadius : BorderRadius.circular(12),
-                                            child : Image.network(
-                                                wallpaper.imageUrl,
-                                                fit: BoxFit.cover,
-                                                loadingBuilder: (context,child, progress){
-                                                    if ( progress == null) return child;
-                                                    return Center (child : CircularProgressIndicator());
-                                                },
-                                                errorBuilder : (context , error , stackTrace){
-                                                    return const Center(
-                                                        child : Icon(Icons.broken_image , size: 48),
-                                                    );
-                                                },
+                                            child : CachedNetworkImage(
+                                              imageUrl: wallpaper.imageUrl,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context , url) => const Center(
+                                                child: CircularProgressIndicator(),
+                                              ),
+                                              errorWidget: (context ,url, error) =>const Center(
+                                                child: Icon(Icons.broken_image, size: 48),
+                                              ),
+
                                             ),
                                         ),
                                     ),
