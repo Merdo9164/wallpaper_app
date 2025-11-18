@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                                         child : ClipRRect( // köşeleri yuvarlat
                                             borderRadius : BorderRadius.circular(12),
                                             child : Image.network(
-                                                wallpaper.imageUrl!,
+                                                wallpaper.imageUrl,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder: (context,child, progress){
                                                     if ( progress == null) return child;
