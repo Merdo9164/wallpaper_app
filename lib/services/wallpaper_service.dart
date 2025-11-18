@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:wallpaper_manager_flutter/wallpaper_manager_flutter.dart';
@@ -14,7 +13,7 @@ class WallpaperService {
     return file.path;
   }
 
-  // Ana ekran duvar kağıdını ayarla
+  // Ana ekran duvar kağıdını ayarla.     
   static Future<void> setHomeWallpaper(String imagePath) async {
     await WallpaperManagerFlutter()
         .setWallpaper(File(imagePath), WallpaperManagerFlutter.homeScreen);

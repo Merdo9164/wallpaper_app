@@ -20,9 +20,11 @@ class FullScreenPage extends StatelessWidget {
         await WallpaperService.setLockScreenWallpaper(imagePath);
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Wallpaper başarıyla uygulandı!')),
-      );
+       );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Hata: $e')),
