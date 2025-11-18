@@ -13,7 +13,7 @@ class WallpaperService {
     return file.path;
   }
 
-  // Ana ekran duvar kağıdını ayarla
+  // Ana ekran duvar kağıdını ayarla.     
   static Future<void> setHomeWallpaper(String imagePath) async {
     await WallpaperManagerFlutter()
         .setWallpaper(File(imagePath), WallpaperManagerFlutter.homeScreen);
