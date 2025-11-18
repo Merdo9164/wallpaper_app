@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
                                 childAspectRatio: 0.7,
                             ),
                             itemCount: wallpapers.length,
+                            addAutomaticKeepAlives: true,
+                            cacheExtent: 1000,
                             itemBuilder: (context, index){
                                 final wallpaper = wallpapers[index];
                                 final heroTag = 'wallpaper-${wallpaper.id}';
@@ -71,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                                               errorWidget: (context ,url, error) =>const Center(
                                                 child: Icon(Icons.broken_image, size: 48),
                                               ),
+                                                fadeInDuration: const Duration(milliseconds: 250),
 
                                             ),
                                         ),
