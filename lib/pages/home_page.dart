@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wallpaper_app/pages/wallpaper_grid_item.dart';
 import '../models/wallpaper.dart';
 import '../services/wallpaper_api.dart';
-import 'full_screen_page.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 
 
 class HomePage extends StatefulWidget{
@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget{
     State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     final api = WallpaperApi(baseUrl: 'http://192.168.1.104:5266');
     late Future<List<Wallpaper>> wallpapersFuture;
 
@@ -21,9 +21,12 @@ class _HomePageState extends State<HomePage> {
         super.initState();
         wallpapersFuture = api.getAllWallpapers();
     }
+    @override
+    bool get wantKeepAlive => true;
     
     @override
     Widget build(BuildContext context){
+      super.build(context);
         return Scaffold(
             appBar: AppBar(title: Text('Wallpapers')),
             body : FutureBuilder<List<Wallpaper>>(
@@ -37,7 +40,10 @@ class _HomePageState extends State<HomePage> {
                         return Center(child: Text('No wallpapers found'));
                     }else {
                         final wallpapers = snapshot.data!;
+                        
                         return GridView.builder(
+                            key: const PageStorageKey('wallpaper_grid'), // sayfa dönüşlerinde rebuild engelle
+                            padding: const EdgeInsets.all(8),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, // iki kolon
                                 crossAxisSpacing: 4,
@@ -46,39 +52,12 @@ class _HomePageState extends State<HomePage> {
                             ),
                             itemCount: wallpapers.length,
                             addAutomaticKeepAlives: true,
-                            cacheExtent: 1000,
+                            cacheExtent: 3000,
                             itemBuilder: (context, index){
-                                final wallpaper = wallpapers[index];
-                                final heroTag = 'wallpaper-${wallpaper.id}';
-                                return GestureDetector(
-                                    onTap: (){
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FullScreenPage(wallpaper: wallpaper),
-                                            ),
-                                        );
-                                    },
-                                    child : Hero(
-                                        tag : heroTag, // (liste ve detay sayfasındaki) yumuşak geçiş animasyonu oluşur
-                                        child : ClipRRect( // köşeleri yuvarlat
-                                            borderRadius : BorderRadius.circular(12),
-                                            child : CachedNetworkImage(
-                                              imageUrl: wallpaper.imageUrl,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context , url) => const Center(
-                                                child: CircularProgressIndicator(),
-                                              ),
-                                              errorWidget: (context ,url, error) =>const Center(
-                                                child: Icon(Icons.broken_image, size: 48),
-                                              ),
-                                                fadeInDuration: const Duration(milliseconds: 250),
-
-                                            ),
-                                        ),
-                                    ),
-                                );
+                                final wallpaper =wallpapers[index];
+                                return WallpaperGridItem(
+                                    key: ValueKey(wallpaper.id), // rebuild sonrası cached image korunacak
+                                    wallpaper: wallpaper);
                             },
                         );
                     }

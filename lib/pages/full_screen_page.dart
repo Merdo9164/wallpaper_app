@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/wallpaper.dart';
 import '../services/wallpaper_service.dart';
@@ -8,6 +9,7 @@ class FullScreenPage extends StatelessWidget {
   const FullScreenPage({super.key, required this.wallpaper});
 
   Future<void> _setWallpaper(BuildContext context , int target) async {
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final imagePath = await WallpaperService.downloadImage(wallpaper.imageUrl);
 
@@ -20,13 +22,12 @@ class FullScreenPage extends StatelessWidget {
         await WallpaperService.setLockScreenWallpaper(imagePath);
       }
 
-      if(context.mounted){
-        ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(content: Text('Wallpaper başarıyla uygulandı!')),
        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(content: Text('Hata: $e')),
       );
     }
@@ -94,22 +95,18 @@ class FullScreenPage extends StatelessWidget {
                 minScale: 1.0,
                 maxScale: 4.0,
                 child: wallpaper.imageUrl.isNotEmpty
-                    ? Image.network(
-                        wallpaper.imageUrl,
+                    ? CachedNetworkImage(
+                        imageUrl: wallpaper.imageUrl,
+                        fadeInDuration: Duration.zero,
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.contain,
-                        loadingBuilder: (context, child, progress) {
-                          if (progress == null) return child;
-                          return const Center(
-                              child: CircularProgressIndicator(
-                                  color: Colors.white));
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                              child: Icon(Icons.broken_image,
-                                  color: Colors.white, size: 64));
-                        },
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        ), 
+                        errorWidget: (context,url,error) =>const Center(
+                          child: Icon(Icons.broken_image , color: Colors.white,size: 64),
+                        ),
                       )
                     : const Center(
                         child: Icon(Icons.broken_image,
@@ -125,7 +122,7 @@ class FullScreenPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20 , vertical: 50), // ekranın kenarlarından boşluk 
               child : ElevatedButton(
                 style : ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white.withOpacity(0.7),  // yarı şeffaf beyaz
+                  backgroundColor: Colors.white.withValues(alpha: 0.7),  // yarı şeffaf beyaz
                   padding: const EdgeInsets.symmetric(vertical: 15), // yüksekliği arttır
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12), // köşeleri yuvarlat
