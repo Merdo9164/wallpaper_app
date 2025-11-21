@@ -24,7 +24,8 @@ class FullScreenPage extends StatelessWidget {
 
       messenger.showSnackBar(
         const SnackBar(content: Text('Wallpaper başarıyla uygulandı!')),
-      );
+       );
+      }
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text('Hata: $e')),
