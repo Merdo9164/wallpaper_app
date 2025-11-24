@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
-void main() {
+void main() async {
+  const envFile = kReleaseMode ? '.env.prod' : '.env';
+
+  await dotenv.load(fileName: envFile);
+
+  
   runApp( 
     const ProviderScope(child: MyApp()),
      );
