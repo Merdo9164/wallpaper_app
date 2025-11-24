@@ -6,23 +6,13 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 
 
-class WallpaperGridItem extends StatefulWidget{
+class WallpaperGridItem extends StatelessWidget{
   final Wallpaper wallpaper;
 
   const WallpaperGridItem({super.key , required this.wallpaper});
 
-  @override
-  State<WallpaperGridItem> createState() => _WallpaperGridItemState();
-
-}
-class _WallpaperGridItemState extends State<WallpaperGridItem> with AutomaticKeepAliveClientMixin{
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
+ @override
   Widget build(BuildContext context){
-    super.build(context);
-    final wallpaper = widget.wallpaper;
     final heroTag = 'wallpaper-${wallpaper.id}';
 
     return GestureDetector(
@@ -53,4 +43,5 @@ class _WallpaperGridItemState extends State<WallpaperGridItem> with AutomaticKee
       ),
     );
   }
+
 }

@@ -5,32 +5,18 @@ import '../services/wallpaper_api.dart';
 
 
 
-class HomePage extends StatefulWidget{
-    const HomePage({super.key});
+class HomePage extends StatelessWidget{
+     HomePage({super.key});
 
-    @override
-    State<HomePage> createState() => _HomePageState();
-}
+    final api = WallpaperApi(baseUrl: 'https://wagaxis.com');
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
-    final api = WallpaperApi(baseUrl: 'http://192.168.1.104:5266');
-    late Future<List<Wallpaper>> wallpapersFuture;
-
-    @override
-    void initState(){
-        super.initState();
-        wallpapersFuture = api.getAllWallpapers();
-    }
-    @override
-    bool get wantKeepAlive => true;
-    
-    @override
+   @override
     Widget build(BuildContext context){
-      super.build(context);
+      
         return Scaffold(
             appBar: AppBar(title: Text('Wallpapers')),
             body : FutureBuilder<List<Wallpaper>>(
-                future : wallpapersFuture,
+                future : api.getAllWallpapers(),
                 builder : (context , snapshot){
                     if(snapshot.connectionState == ConnectionState.waiting){
                         return Center(child: CircularProgressIndicator());
@@ -65,5 +51,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             ),
         );
     }
-    
 }
+
+    
+    
+
