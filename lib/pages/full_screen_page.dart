@@ -37,7 +37,7 @@ class FullScreenPage extends StatelessWidget {
   void _showOptions (BuildContext context){
     showModalBottomSheet(
       context: context,
-      builder : (_){
+      builder : (context){
         return SafeArea(
           child : Column(
             mainAxisSize : MainAxisSize.min,
