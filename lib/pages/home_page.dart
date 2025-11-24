@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper_app/pages/wallpaper_grid_item.dart';
-import '../models/wallpaper.dart';
-import '../services/wallpaper_api.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/wallpaper_providers.dart';
 
 
 
-class HomePage extends StatelessWidget{
-     HomePage({super.key});
+class HomePage extends ConsumerWidget{
+     const HomePage({super.key});
 
-    final api = WallpaperApi(baseUrl: 'https://wagaxis.com');
 
    @override
-    Widget build(BuildContext context){
+    Widget build(BuildContext context , WidgetRef ref){
+
+        final wallpapersAsyncValue = ref.watch(wallpapersFutureProvider);
       
         return Scaffold(
             appBar: AppBar(title: Text('Wallpapers')),
-            body : FutureBuilder<List<Wallpaper>>(
-                future : api.getAllWallpapers(),
-                builder : (context , snapshot){
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                        return Center(child: CircularProgressIndicator());
-                    }else if (snapshot.hasError){
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                    }else if (!snapshot.hasData || snapshot.data!.isEmpty){
-                        return Center(child: Text('No wallpapers found'));
-                    }else {
-                        final wallpapers = snapshot.data!;
-                        
-                        return GridView.builder(
+            body : wallpapersAsyncValue.when(
+                 loading: () => const Center(child: CircularProgressIndicator()),
+                 
+                 error: (error ,stackTrace) =>Center(child: Text('Error: $error')),
+
+                 data: (wallpapers){
+                      if(wallpapers.isEmpty){
+                        return const Center(child: Text('No wallpapers found'));
+                      }
+
+                      return GridView.builder(
                             key: const PageStorageKey('wallpaper_grid'), // sayfa dönüşlerinde rebuild engelle
                             padding: const EdgeInsets.all(8),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,8 +45,7 @@ class HomePage extends StatelessWidget{
                                     wallpaper: wallpaper);
                             },
                         );
-                    }
-                },
+                 }
             ),
         );
     }
