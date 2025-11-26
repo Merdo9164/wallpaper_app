@@ -8,25 +8,16 @@ import '../providers/wallpaper_providers.dart';
 class HomePage extends ConsumerWidget{
      const HomePage({super.key});
 
-
    @override
     Widget build(BuildContext context , WidgetRef ref){
 
-        final wallpapersAsyncValue = ref.watch(wallpapersFutureProvider);
+        final wallpapers = ref.watch(wallpapersFutureProvider).requireValue;
       
         return Scaffold(
             appBar: AppBar(title: Text('Wallpapers')),
-            body : wallpapersAsyncValue.when(
-                 loading: () => const Center(child: CircularProgressIndicator()),
-                 
-                 error: (error ,stackTrace) =>Center(child: Text('Error: $error')),
-
-                 data: (wallpapers){
-                      if(wallpapers.isEmpty){
-                        return const Center(child: Text('No wallpapers found'));
-                      }
-
-                      return GridView.builder(
+            body : wallpapers.isEmpty
+                 ? const Center(child: Text('No wallpapers found'))
+                      : GridView.builder(
                             key: const PageStorageKey('wallpaper_grid'), // sayfa dönüşlerinde rebuild engelle
                             padding: const EdgeInsets.all(8),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -44,9 +35,7 @@ class HomePage extends ConsumerWidget{
                                     key: ValueKey(wallpaper.id), // rebuild sonrası cached image korunacak
                                     wallpaper: wallpaper);
                             },
-                        );
-                 }
-            ),
+                        ),     
         );
     }
 }
