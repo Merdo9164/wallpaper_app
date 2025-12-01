@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wallpaper_app/pages/home_page.dart';
+import 'package:wallpaper_app/components/app_drawer.dart';
 
-enum Page{
+enum AppScreen{
   home,
   favorites,
   settings,
 }
 
-final pageProvider = StateProvider<Page>((ref) => Page.home);
+final pageProvider = StateProvider<AppScreen>((ref) => AppScreen.home);
 
 class MainLayout extends ConsumerWidget{
   const MainLayout({super.key});
 
 
-  Widget _getBodyContent(Page activePage){
+  Widget _getBodyContent(AppScreen activePage){
     switch(activePage){
-      case Page.home:
+      case AppScreen.home:
         return const HomePage();
-      case Page.favorites:
+      case AppScreen.favorites:
         return const FavoritesPage();
-      case Page.settings:
+      case AppScreen.settings:
         return const SettingsPage();
     }
   }
 
-  String _getTitle(Page activePage){
+  String _getTitle(AppScreen activePage){
     switch(activePage){
-      case Page.home:
+      case AppScreen.home:
         return 'Tüm Duvar Kağıtları';
-      case Page.favorites:
+      case AppScreen.favorites:
         return 'Favorilerim';
-      case Page.settings:
+      case AppScreen.settings:
         return 'Ayarlar';
     }
   }
@@ -50,50 +51,6 @@ class MainLayout extends ConsumerWidget{
       drawer: AppDrawer(activePage: activePage),
 
       body: _getBodyContent(activePage),
-    );
-  }
-}
-
-class AppDrawer extends ConsumerWidget{
-  final Page activePage;
-  const AppDrawer({required this.activePage, super.key});
-
-  Widget _buildDrawerItem({
-    required WidgetRef ref,
-    required Page page,
-    required IconData icon,
-    required String title,
-  }) {
-    void selectPage(){
-      ref.read(pageProvider.notifier).state = page;
-
-      Navigator.of(ref.context).pop();
-    }
-
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      selected: activePage==page,
-      selectedTileColor: Colors.indigo.shade100,
-      onTap: selectPage,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.indigo),
-            child: Text('Menü', style: TextStyle(color: Colors.white, fontSize: 24)),
-          ),
-          _buildDrawerItem(ref: ref, page: Page.home, icon: Icons.home, title: 'Ana Sayfa'),
-          _buildDrawerItem(ref: ref, page: Page.favorites, icon: Icons.favorite, title: 'Favorilerim'),
-          _buildDrawerItem(ref: ref, page: Page.settings, icon: Icons.settings, title: 'Ayarlar'),
-        ],
-      ),
     );
   }
 }
