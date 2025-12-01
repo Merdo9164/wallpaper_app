@@ -13,9 +13,7 @@ class HomePage extends ConsumerWidget{
 
         final wallpapers = ref.watch(wallpapersFutureProvider).requireValue;
       
-        return Scaffold(
-            appBar: AppBar(title: Text('Wallpapers')),
-            body : wallpapers.isEmpty
+        return wallpapers.isEmpty
                  ? const Center(child: Text('No wallpapers found'))
                       : GridView.builder(
                             key: const PageStorageKey('wallpaper_grid'), // sayfa dönüşlerinde rebuild engelle
@@ -35,8 +33,7 @@ class HomePage extends ConsumerWidget{
                                     key: ValueKey(wallpaper.id), // rebuild sonrası cached image korunacak
                                     wallpaper: wallpaper);
                             },
-                        ),     
-        );
+                        );
     }
 }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'pages/init_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wallpaper_app/pages/init_page.dart';
 
 void main() async {
   const envFile = kReleaseMode ? '.env.prod' : '.env';
