@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Wallpaper App',
-      theme: ThemeData(primarySwatch: Colors.blue),
       home :  InitPage(),
     );
   }
