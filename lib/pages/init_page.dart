@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wallpaper_app/layout/main_layout.dart';
 import '../providers/wallpaper_providers.dart';
-import 'home_page.dart';
 import 'splash_screen.dart';
 
 class InitPage extends ConsumerWidget{
@@ -26,7 +26,7 @@ class InitPage extends ConsumerWidget{
           ),
         ),
         data: (wallpapers){
-          return HomePage();
+          return MainLayout();
         },
       );
   }
